@@ -30,11 +30,12 @@ function Level(plan){
   this.width = plan[0].length;
   this.height = plan.length;
   this.grid=[];
+  this.score=0;
   for(let i=0;i<this.height;i++){
     this.grid[i] = new Array(this.width)
   }
   this.board='';
-  this.player={speed:6};
+  this.player={speed:12};
   for(let i=0,l=plan.length;i<l;i++){
     this.board += '<tr>';
     for(let j=0,k=plan[i].length;j<k;j++){
@@ -61,6 +62,25 @@ function Level(plan){
     this.board += '</th>';
   }
   this.player.element = document.getElementsByClassName("player");
+}
+//rocks
+function generateRock(){
+  let random = Math.random();
+  if(random<0.3){
+    this.img = "url('img/rock3.png')";
+  }
+  else if(random<0.6){
+    this.img = "url('img/rock1.png')";
+  }
+  else{
+    this.img = "url('img/rock2.png')";
+  }
+  this.rotate = 45;
+  this.x = Math.floor((Math.random() * 29)+1);
+  this.y = 0;
+  this.fall = ()=>{
+    this.y = this.y += 0.5;
+  }
 }
 //Blinking elements
 const blinkingSetup = ()=>{
@@ -124,11 +144,49 @@ const detectMovement = () =>{
     movePlayer(0, 1);
   }
 }
-setInterval(function(){
+let rock = new generateRock();
+const detectColision = ()=>{
+  console.log(rock.img);
+  if(Math.abs(game.player.x-rock.x*30) < 30 && Math.abs(game.player.y-rock.y*30) < 30){
+    if(rock.img =="url('img/rock3.png')"){
+      game.score+=10;
+      document.getElementsByClassName("score")[0].innerHTML = game.score;
+      rock = new generateRock();
+    }
+    else{
+      rock = new generateRock();
+    }
+  }
+}
+setInterval(()=>{
   detectMovement();
+  detectColision();
 }, 1000/24);
 //render level to DOM
 let game = new Level(level1);
-console.log(game.grid);
 let gameBoard=document.getElementById('game');
 gameBoard.innerHTML=game.board;
+
+
+let rockDOM = document.createElement("div");
+rockDOM.classList.add("rockElement");
+gameBoard.appendChild(rockDOM);
+let rockElement = document.getElementsByClassName("rockElement");
+
+const rockMove = ()=>{
+  rockElement[0].classList.remove("rock_bottom");
+  rockElement[0].classList.add("rock");
+  rockElement[0].style.backgroundImage = rock.img;
+  rockElement[0].style.left = rock.x*30 + 'px';
+  rockElement[0].style.top = (rock.y+1)*30 + 'px';
+  rockElement[0].style.transform = "rotate(" + (rock.rotate + 45) +  "deg)";
+  rock.rotate += 45;
+  rock.fall();
+  if(rock.y > game.height-3){
+    rockElement[0].classList.add("rock_bottom");
+  }
+  if(rock.y > game.height-2){
+    rock = new generateRock();
+  }
+}
+setInterval(rockMove,150);

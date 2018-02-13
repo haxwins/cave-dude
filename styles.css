@@ -33,6 +33,7 @@ th{
 }
 .player_blink{
 	background-color: #74a6f7;
+	position: absolute;
 }
 .lava{
 	background-image: url('img/lava.png');
@@ -43,4 +44,20 @@ th{
 .container{
   display: flex;
   justify-content: center;
+}
+.rock{
+	height:30px;
+	width:30px;
+	top:0;
+	left:30px;
+	position: absolute;
+}
+.rock_bottom{
+	background-image: url('img/rock_bottom.png');
+	transform: rotate(90deg);
+}
+.score{
+	text-align: center;
+	color:white;
+	font-size: 50px;
 }
