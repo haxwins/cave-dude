@@ -1,0 +1,46 @@
+body{
+	margin:0;
+	padding:0;
+}
+table{
+	padding: 0;
+	margin: 0;
+	position: relative;
+	border-collapse:collapse;
+  align-items: center;
+	background-color: gray;
+}
+th{
+	padding: 0;
+	border:none;
+	height:20px;
+	width:20px;
+}
+
+th, td {
+	background-color:white;
+}
+th{
+
+  background-color: gray;
+}
+.wall{
+  background-color: black;
+}
+.player{
+  background-color: red;
+	position: absolute;
+}
+.player_blink{
+	background-color: blue;
+}
+.lava{
+	background-color: orange;
+}
+.lava_blink{
+	background-color: yellow;
+}
+.container{
+  display: flex;
+  justify-content: center;
+}
