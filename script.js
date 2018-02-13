@@ -45,26 +45,26 @@ function Level(plan){
 const blinkingSetup = ()=>{
   let bool=true;
   return (classMain,classBlink)=>{
-                let el = document.getElementsByClassName(classMain);
-                if(bool){
-                  for(let i=0; i<el.length;i++){
-                    el[i].classList.add(classBlink);
-                    bool = false;
-                  }
-                }
-                else{
-                  for(let i=0; i<el.length;i++){
-                    el[i].classList.remove(classBlink);
-                    bool = true;
-                  }
-                }
-              }
+    let el = document.getElementsByClassName(classMain);
+      if(bool){
+        for(let i=0; i<el.length;i++){
+          el[i].classList.add(classBlink);
+          bool = false;
+        }
+      }
+      else{
+        for(let i=0; i<el.length;i++){
+          el[i].classList.remove(classBlink);
+          bool = true;
+        }
+      }
+    }
 }
 const blinkingPlayer = blinkingSetup();
 const blinkingLava = blinkingSetup();
 setInterval(()=>{blinkingPlayer('player','player_blink')},1000);
 setInterval(()=>{blinkingLava('lava','lava_blink')},500);
-let key='';
+//movement
 var keys = {};
     keys.UP = 38;
     keys.LEFT = 37;
