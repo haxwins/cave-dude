@@ -12,10 +12,27 @@ const level1 = [
   "xxzzzx                  c    x",
   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 ];
+const level2 = [
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "x          z                 x",
+  "x                            x",
+  "x                            x",
+  "x                            x",
+  "x                            x",
+  "x                            x",
+  "x                            x",
+  "x                            x",
+  "x                       c    x",
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+];
 //constructor for level
 function Level(plan){
   this.width = plan[0].length;
   this.height = plan.length;
+  this.grid=[];
+  for(let i=0;i<this.height;i++){
+    this.grid[i] = new Array(this.width)
+  }
   this.board='';
   this.player={speed:6};
   for(let i=0,l=plan.length;i<l;i++){
@@ -24,17 +41,21 @@ function Level(plan){
       let temp=plan[i];
       if(temp[j]=='x'){
         this.board += "<th class='wall'></th>";
+        this.grid[i][j] = 'x';
       }
       else if(temp[j]=='c'){
         this.board += "<th class='player'></th>";
+        this.grid[i][j] = 'c';
         this.player.x = j*30;
         this.player.y = i*30;
       }
       else if(temp[j]=='z'){
         this.board += "<th class='lava'></th>";
+        this.grid[i][j] = 'z';
       }
       else{
         this.board += '<th></th>';
+        this.grid[i][j] = ' ';
       }
     }
     this.board += '</th>';
@@ -82,30 +103,32 @@ document.body.onkeydown = (e)=>{
   keys[kc] = e.type == 'keydown';
   };
 const movePlayer = (x,y)=>{
-  game.player.x += x*game.player.speed;
-  game.player.y += y*game.player.speed;
-  game.player.element[0].style.left = game.player.x + 'px';
-  game.player.element[0].style.top = game.player.y + 'px';
-
+    game.player.x += x*game.player.speed;
+    game.player.y += y*game.player.speed;
+    game.player.element[0].style.left = game.player.x + 'px';
+    game.player.element[0].style.top = game.player.y + 'px';
 }
 const detectMovement = () =>{
-  if ( keys[keys.LEFT] ) {
-        movePlayer(-1, 0);
-      }
-      if ( keys[keys.RIGHT] ) {
-        movePlayer(1, 0);
-      }
-      if ( keys[keys.UP] ) {
-        movePlayer(0, -1);
-      }
-      if ( keys[keys.DOWN] ) {
-        movePlayer(0, 1);
-      }
+  let gridx = Math.floor(game.player.x/30);
+  let gridy = Math.floor(game.player.y/30);
+  if(keys[keys.LEFT]){
+    movePlayer(-1,0);
+  }
+  if(keys[keys.RIGHT]){
+    movePlayer(1,0);
+  }
+  if(keys[keys.UP]){
+    movePlayer(0,-1);
+  }
+  if(keys[keys.DOWN]){
+    movePlayer(0, 1);
+  }
 }
 setInterval(function(){
   detectMovement();
 }, 1000/24);
 //render level to DOM
 let game = new Level(level1);
+console.log(game.grid);
 let gameBoard=document.getElementById('game');
 gameBoard.innerHTML=game.board;
