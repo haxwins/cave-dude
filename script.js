@@ -1,3 +1,4 @@
+//level
 let level1 = [
   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
   "x                            x",
@@ -11,6 +12,7 @@ let level1 = [
   "x                        c   x",
   "xxxxzzzzxxxxxxxxxxxxxxxxxxxxxx",
 ];
+//constructor for level
 function Level(plan){
   this.width = plan[0].length;
   this.height = plan.length;
@@ -38,7 +40,7 @@ function Level(plan){
     this.board += '</th>';
   }
 }
-
+//key press handler
 let keyPress = (e)=>{
   if(e.key=="ArrowRight"){
     plan1.playerPosition.x += 5;
@@ -78,8 +80,12 @@ let blinkingSetup = ()=>{
 }
 let blinkingPlayer = blinkingSetup();
 let blinkingLava = blinkingSetup();
-setInterval(()=>{blinking('player','player_blink')},1000);
-setInterval(()=>{blinking2('lava','lava_blink')},2000);
+setInterval(()=>{blinkingPlayer('player','player_blink')},1000);
+setInterval(()=>{blinkingLava('lava','lava_blink')},2000);
+//render level to DOM
+let plan1 = new Level(level1);
+let game=document.getElementById('game');
+game.innerHTML=plan1.board;
 //render player position
 let renderMovment = ()=>{
   let playerDOM = document.getElementsByClassName("player");
@@ -87,9 +93,5 @@ let renderMovment = ()=>{
   playerDOM[0].style.top = plan1.playerPosition.y + 'px';
 }
 renderMovment();
-//render level to DOM
-let plan1 = new Level(level1);
-let game=document.getElementById('game');
-game.innerHTML=plan1.board;
-//
+//event listener for arrow key press
 document.addEventListener("keypress",(e)=>{keyPress(e)},false);
