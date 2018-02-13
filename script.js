@@ -1,5 +1,5 @@
 //level
-let level1 = [
+const level1 = [
   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
   "x                            x",
   "x                      xx    x",
@@ -9,15 +9,15 @@ let level1 = [
   "x             xx             x",
   "x                            x",
   "x                            x",
-  "x                        c   x",
-  "xxxxzzzzxxxxxxxxxxxxxxxxxxxxxx",
+  "xxzzzx                  c    x",
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 ];
 //constructor for level
 function Level(plan){
   this.width = plan[0].length;
   this.height = plan.length;
   this.board='';
-  this.playerPosition={};
+  this.player={speed:6};
   for(let i=0,l=plan.length;i<l;i++){
     this.board += '<tr>';
     for(let j=0,k=plan[i].length;j<k;j++){
@@ -27,8 +27,8 @@ function Level(plan){
       }
       else if(temp[j]=='c'){
         this.board += "<th class='player'></th>";
-        this.playerPosition.x = j*20;
-        this.playerPosition.y = i*20;
+        this.player.x = j*30;
+        this.player.y = i*30;
       }
       else if(temp[j]=='z'){
         this.board += "<th class='lava'></th>";
@@ -39,28 +39,10 @@ function Level(plan){
     }
     this.board += '</th>';
   }
-}
-//key press handler
-let keyPress = (e)=>{
-  if(e.key=="ArrowRight"){
-    plan1.playerPosition.x += 5;
-    renderMovment();
-  }
-  else if(e.key=="ArrowLeft"){
-    plan1.playerPosition.x -= 5;
-    renderMovment();
-  }
-  else if(e.key=="ArrowUp"){
-    plan1.playerPosition.y -= 5;
-    renderMovment();
-  }
-  else if(e.key=="ArrowDown"){
-    plan1.playerPosition.y += 5;
-    renderMovment();
-  }
+  this.player.element = document.getElementsByClassName("player");
 }
 //Blinking elements
-let blinkingSetup = ()=>{
+const blinkingSetup = ()=>{
   let bool=true;
   return (classMain,classBlink)=>{
                 let el = document.getElementsByClassName(classMain);
@@ -78,20 +60,52 @@ let blinkingSetup = ()=>{
                 }
               }
 }
-let blinkingPlayer = blinkingSetup();
-let blinkingLava = blinkingSetup();
+const blinkingPlayer = blinkingSetup();
+const blinkingLava = blinkingSetup();
 setInterval(()=>{blinkingPlayer('player','player_blink')},1000);
-setInterval(()=>{blinkingLava('lava','lava_blink')},2000);
-//render level to DOM
-let plan1 = new Level(level1);
-let game=document.getElementById('game');
-game.innerHTML=plan1.board;
-//render player position
-let renderMovment = ()=>{
-  let playerDOM = document.getElementsByClassName("player");
-  playerDOM[0].style.left = plan1.playerPosition.x + 'px';
-  playerDOM[0].style.top = plan1.playerPosition.y + 'px';
+setInterval(()=>{blinkingLava('lava','lava_blink')},500);
+let key='';
+var keys = {};
+    keys.UP = 38;
+    keys.LEFT = 37;
+    keys.RIGHT = 39;
+    keys.DOWN = 40;
+document.body.onkeyup =
+document.body.onkeydown = (e)=>{
+  if (e.preventDefault) {
+      e.preventDefault();
+  }
+  else {
+  e.returnValue = false;
+  }
+  let kc = e.keyCode || e.which;
+  keys[kc] = e.type == 'keydown';
+  };
+const movePlayer = (x,y)=>{
+  game.player.x += x*game.player.speed;
+  game.player.y += y*game.player.speed;
+  game.player.element[0].style.left = game.player.x + 'px';
+  game.player.element[0].style.top = game.player.y + 'px';
+
 }
-renderMovment();
-//event listener for arrow key press
-document.addEventListener("keypress",(e)=>{keyPress(e)},false);
+const detectMovement = () =>{
+  if ( keys[keys.LEFT] ) {
+        movePlayer(-1, 0);
+      }
+      if ( keys[keys.RIGHT] ) {
+        movePlayer(1, 0);
+      }
+      if ( keys[keys.UP] ) {
+        movePlayer(0, -1);
+      }
+      if ( keys[keys.DOWN] ) {
+        movePlayer(0, 1);
+      }
+}
+setInterval(function(){
+  detectMovement();
+}, 1000/24);
+//render level to DOM
+let game = new Level(level1);
+let gameBoard=document.getElementById('game');
+gameBoard.innerHTML=game.board;
